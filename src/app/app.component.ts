@@ -160,8 +160,14 @@ export class MyApp {
             mostraCad: this.mostraOpcaoCadastro,
           },
           {
-            submenu: "Listar",
+            submenu: "Listar Atuais",
             componente: "DevocionaisListarPage",
+            iconeSub: "md-list-box",
+            mostra: this.mostraOpcaoListar,
+          },
+          {
+            submenu: "Listar Antigos",
+            componente: "DevocionaisListarAntigosPage",
             iconeSub: "md-list-box",
             mostra: this.mostraOpcaoListar,
           },
@@ -267,8 +273,129 @@ export class MyApp {
             componente: "ProfilePage",
             mostra: this.mostraOpcaoListar,
           },
+          {
+            submenu: "Alterar Senha",
+            iconeSub: "md-key",
+            componente: "AlterarSenhaPage",
+            mostra: this.mostraOpcaoListar,
+          },
         ],
         icone: "md-cog",
+        mostra: true,
+      },
+    ];
+  }
+
+  tratarMenuTelaVistante(): any[] {
+    return [
+      {
+        titulo: "Mensagens",
+        subTitulo: [
+          {
+            submenu: "Listar",
+            componente: "MensagemListarPage",
+            iconeSub: "md-list-box",
+            mostra: this.mostraOpcaoListar,
+          },
+        ],
+        icone: "md-filing",
+        mostra: true,
+      },
+      {
+        titulo: "PG´s",
+        subTitulo: [
+          {
+            submenu: "Listar",
+            componente: "PgListarPage",
+            iconeSub: "md-list-box",
+            mostra: this.mostraOpcaoListar,
+          },
+        ],
+        icone: "md-home",
+        mostra: true,
+      },
+      {
+        titulo: "Agendas e Eventos",
+        subTitulo: [
+          {
+            submenu: "Listar",
+            componente: "EventoAgendaListarPage",
+            iconeSub: "md-list-box",
+            mostra: this.mostraOpcaoListar,
+          },
+        ],
+        icone: "md-calendar",
+        mostra: true,
+      },
+      {
+        titulo: "Devocionais",
+        subTitulo: [
+          {
+            submenu: "Listar Atuais",
+            componente: "DevocionaisListarPage",
+            iconeSub: "md-list-box",
+            mostra: this.mostraOpcaoListar,
+          },
+          {
+            submenu: "Listar Antigos",
+            componente: "DevocionaisListarAntigosPage",
+            iconeSub: "md-list-box",
+            mostra: this.mostraOpcaoListar,
+          },
+        ],
+        icone: "md-bookmarks",
+        mostra: true,
+      },
+      {
+        titulo: "Ofertas e Serviços",
+        subTitulo: [
+          {
+            submenu: "Listar",
+            componente: "OfertasServicoListarPage",
+            iconeSub: "md-list-box",
+            mostra: this.mostraOpcaoListar,
+          },
+        ],
+        icone: "md-hammer",
+        mostra: true,
+      },
+      {
+        titulo: "Missões",
+        subTitulo: [
+          {
+            submenu: "Listar",
+            componente: "MissaoListarPage",
+            iconeSub: "md-list-box",
+            mostra: this.mostraOpcaoListar,
+          },
+        ],
+        icone: "md-filing",
+        mostra: true,
+      },
+      {
+        titulo: "Aniversariantes",
+        subTitulo: [
+          {
+            submenu: "Listar",
+            componente: "AniversariantesListarPage",
+            iconeSub: "md-list-box",
+            mostra: this.mostraOpcaoListar,
+          },
+        ],
+        icone: "md-color-wand",
+        mostra: true,
+      },
+      {
+        titulo: "Boletim",
+        subTitulo: [
+          {
+            submenu: "Boletim Semanal",
+            componente: "BoletimPage",
+            iconeSub: "md-list-box",
+            mostra: this.mostraOpcaoListar,
+          },
+        ],
+        icone: "md-paper",
         mostra: true,
       },
     ];
@@ -319,8 +446,14 @@ export class MyApp {
         titulo: "Devocionais",
         subTitulo: [
           {
-            submenu: "Listar",
+            submenu: "Listar Atuais",
             componente: "DevocionaisListarPage",
+            iconeSub: "md-list-box",
+            mostra: this.mostraOpcaoListar,
+          },
+          {
+            submenu: "Listar Antigos",
+            componente: "DevocionaisListarAntigosPage",
             iconeSub: "md-list-box",
             mostra: this.mostraOpcaoListar,
           },
@@ -382,7 +515,20 @@ export class MyApp {
       },
       {
         titulo: "Perfil",
-        componente: "ProfilePage",
+        subTitulo: [
+          {
+            submenu: "Alterar Foto",
+            iconeSub: "md-camera",
+            componente: "ProfilePage",
+            mostra: this.mostraOpcaoListar,
+          },
+          {
+            submenu: "Alterar Senha",
+            iconeSub: "md-key",
+            componente: "AlterarSenhaPage",
+            mostra: this.mostraOpcaoListar,
+          },
+        ],
         icone: "md-cog",
         mostra: true,
       },
@@ -391,11 +537,8 @@ export class MyApp {
 
   get membroLogado() {
     this.dadosMembro = this.storage.getMembro();
-    return this.storage.getMembro();
+    return this.dadosMembro;
   }
-
-  paginasPerfil = [{ titulo: "Perfil", componente: "ProfilePage" }];
-  paginaPerfil = { titulo: "Perfil", componente: "ProfilePage" };
 
   abrePagina(pagina): void {
     this.menuCtrl.close();
@@ -447,7 +590,7 @@ export class MyApp {
   }
 
   get imagemTratada() {
-    if (!this.picture) {
+    if (!this.picture && this.membroLogado != undefined) {
       this.membroService.getImageFromBucket(this.dadosMembro.id + "").subscribe(
         (response) => {
           this.dadosMembro.imageUrl = `${API_CONFIG.bucketBaseUrl}/membro${this.dadosMembro.id}.jpg`;
@@ -480,6 +623,8 @@ export class MyApp {
     this.mostraOpcaoCadastro = this.storage.temPerfilAdminLider();
     if (this.mostraOpcaoCadastro) {
       this.paginas = this.tratarMenuTela();
+    } else if (this.storage.temPerfilVisitante()) {
+      this.paginas = this.tratarMenuTelaVistante();
     } else {
       this.paginas = this.tratarMenuTelaSemCadastro();
     }
@@ -490,8 +635,10 @@ export class MyApp {
     this.mostraOpcaoCadastro = false;
     this.mostraOpcaoListar = true;
     this.picture = undefined;
-    this.auth.logout();
+    this.menuCtrl.enable(false);
     this.menuCtrl.close();
+    this.dadosMembro = undefined;
+    this.auth.logout();
     this.nav.setRoot("LoginPage");
   }
 

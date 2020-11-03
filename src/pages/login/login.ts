@@ -27,6 +27,8 @@ export class LoginPage {
     senha: "",
   };
 
+  isVisitante: Boolean = false;
+
   membro: MembroInfo = new MembroInfo();
 
   constructor(
@@ -40,11 +42,12 @@ export class LoginPage {
     public igrejaService: IgrejaService,
     public sanitizer: DomSanitizer
   ) {
+    this.menu.enable(false);
+    this.menu.close();
     this.creds = new CredenciaisDTO();
   }
 
   createUser(user) {
-    console.log("User created! aqui");
     this.events.publish("user:created", user, Date.now());
   }
 
@@ -76,7 +79,8 @@ export class LoginPage {
             this.membro = resposta;
             this.storage.setMembro(this.membro);
             this.createUser(this.membro);
-
+            this.navCtrl.setRoot("TabsPage");
+            this.menu.enable(true);
             this.igrejaService.obterIgreja(this.membro.igrejaId).subscribe(
               (resposta) => {
                 this.storage.setIgreja(resposta);
@@ -99,7 +103,6 @@ export class LoginPage {
           },
           (error) => {}
         );
-        this.navCtrl.setRoot("TabsPage");
       },
       (error) => {}
     );
@@ -109,6 +112,10 @@ export class LoginPage {
     this.navCtrl.push("SignupPage");
   }
 
+  resetarSenha() {
+    this.navCtrl.push("EsqueceuSenhaPage", { email: this.creds.email });
+  }
+
   blobToDataURL(blob) {
     return new Promise((fulfill, reject) => {
       let reader = new FileReader();
@@ -116,5 +123,15 @@ export class LoginPage {
       reader.onload = (e) => fulfill(reader.result);
       reader.readAsDataURL(blob);
     });
+  }
+
+  alteraLoginMembroVisitante() {
+    this.storage;
+    if (this.isVisitante) {
+      this.creds.email = "visitante@gmail.com";
+      this.creds.senha = "12345678";
+    } else {
+      this.creds = new CredenciaisDTO();
+    }
   }
 }
